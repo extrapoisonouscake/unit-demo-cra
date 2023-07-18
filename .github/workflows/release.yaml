@@ -13,12 +13,17 @@ jobs:
     permissions:
       contents: write
     steps:
-      - run: |
+      - name: 🎇 Set an environment variable for possible hot fixes
+        run: |
           VARREF=${{ github.ref_name }}
           VARREF=${VARREF//release-}
           echo "ref_name=${VARREF}" >> $GITHUB_ENV
       - name: 🪜 Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: 🪤 Check for conventional commit
+        uses: wagoid/commitlint-github-action@v4
       - name: 🛎️ Create a release branch
         uses: actions/github-script@v6
         with:
@@ -54,7 +59,8 @@ jobs:
     permissions:
       issues: write
     steps:
-      - run: |
+      - name: 🎇 Set an environment variable for possible hot fixes
+        run: |
           VARREF=${{ github.ref_name }}
           VARREF=${VARREF//release-}
           echo "ref_name=${VARREF}" >> $GITHUB_ENV
