@@ -1,5 +1,5 @@
 name: Process a newly sent release
-run-name: "Process a newly sent ${{github.ref_name}} release"
+run-name: "Process a newly sent release"
 on:
   push:
     branches: [$default-branch,"release-v*"]
@@ -7,11 +7,16 @@ on:
       - "v*"
 jobs:
   setup:
+    
     name: 🛠️ Setup and test the release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - run: |
+        VARREF=${{ github.ref_name }}
+        VARREF=${VARREF//release-}
+        echo "ref_name=${VARREF}" >> $GITHUB_ENV
       - name: 🪜 Checkout
         uses: actions/checkout@v3
       - name: 🛎️ Create a release branch
@@ -22,7 +27,7 @@ jobs:
             await github.request('POST /repos/{owner}/{repo}/git/refs', {
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/heads/release-${{github.ref_name}}',
+            ref: 'refs/heads/release-${{env.ref_name}}',
             sha: context.sha
             })
             }catch{}
@@ -49,6 +54,10 @@ jobs:
     permissions:
       issues: write
     steps:
+      - run: |
+        VARREF=${{ github.ref_name }}
+        VARREF=${VARREF//release-}
+        echo "ref_name=${VARREF}" >> $GITHUB_ENV
       - name: 🪜 Checkout
         uses: actions/checkout@v3
         with:
@@ -66,7 +75,7 @@ jobs:
           result-encoding: string
           script: |
             const response = await github.rest.search.issuesAndPullRequests({
-              q:`repo:${{github.repository}} is:issue "${{github.ref_name}}" in:title is:closed`
+              q:`repo:${{github.repository}} is:issue "${{env.ref_name}}" in:title is:closed`
             })
             const foundIssues = response.data.items
             
@@ -79,7 +88,7 @@ jobs:
             const dataToWrite = {
                 ...searchData,
                 labels:["RELEASE"],
-                title: "Release ${{github.ref_name}}",
+                title: "Release ${{env.ref_name}}",
                 body: changelogWithAuthor,
                 assignees:["${{github.actor}}"]
             }
