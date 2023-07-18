@@ -2,7 +2,7 @@ name: Process a newly sent release
 run-name: "Process a newly sent release"
 on:
   push:
-    branches: [$default-branch,"release-v*"]
+    branches: "release-v*"
     tags:
       - "v*"
 jobs:
@@ -14,9 +14,9 @@ jobs:
       contents: write
     steps:
       - run: |
-        VARREF=${{ github.ref_name }}
-        VARREF=${VARREF//release-}
-        echo "ref_name=${VARREF}" >> $GITHUB_ENV
+          VARREF=${{ github.ref_name }}
+          VARREF=${VARREF//release-}
+          echo "ref_name=${VARREF}" >> $GITHUB_ENV
       - name: 🪜 Checkout
         uses: actions/checkout@v3
       - name: 🛎️ Create a release branch
@@ -55,9 +55,9 @@ jobs:
       issues: write
     steps:
       - run: |
-        VARREF=${{ github.ref_name }}
-        VARREF=${VARREF//release-}
-        echo "ref_name=${VARREF}" >> $GITHUB_ENV
+          VARREF=${{ github.ref_name }}
+          VARREF=${VARREF//release-}
+          echo "ref_name=${VARREF}" >> $GITHUB_ENV
       - name: 🪜 Checkout
         uses: actions/checkout@v3
         with:
