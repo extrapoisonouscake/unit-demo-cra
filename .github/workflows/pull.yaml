@@ -12,8 +12,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name:  Check for conventional commit
-        uses: wagoid/commitlint-github-action@v5
+      - name: 🪤 Check for conventional commit
+        uses: wagoid/commitlint-github-action@v4
       - name: 🔧 Setup Node.JS
         uses: actions/setup-node@v3
         with:

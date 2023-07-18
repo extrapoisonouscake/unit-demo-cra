@@ -14,10 +14,6 @@ jobs:
     steps:
       - name: 🪜 Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name:  Check for conventional commit
-        uses: wagoid/commitlint-github-action@v5
       - name: 🛎️ Create a release branch
         uses: actions/github-script@v6
         with:
